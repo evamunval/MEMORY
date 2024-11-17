@@ -28,26 +28,25 @@ public class GameOverActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbarHelper.setupToolbar(toolbar);
 
-        //DATABASE
+        Intent intent = getIntent();
         int score = getIntent().getIntExtra("SCORE",0);
-        TextView scoreTextView = findViewById(R.id.finalScore);
-        scoreTextView.setText(String.valueOf(score));
-
-        int scoreToInsert = Integer.parseInt(scoreTextView.getText().toString());
-
-        try {
-            DBGameBuilder dbHelper = new DBGameBuilder(this);
-            SQLiteDatabase db = dbHelper.getWritableDatabase();
-
-            ContentValues values = new ContentValues();
-            values.put(DBStructure.DataEntry.COLUMN_SCORE, scoreToInsert);
-            long newRowId = db.insert(DBStructure.DataEntry.TABLE_NAME, null, values);
-        } catch (Exception e) {
-            Log.e("GameOverActivity", "Error inserting score: " + e.getMessage());
-        }
 
         //Initialize id's
         Button replayButton = findViewById(R.id.btReplay);
+        TextView timeTextView = findViewById(R.id.timeTextView);
+        TextView scoreTextView = findViewById(R.id.finalScore);
+        scoreTextView.setText(String.valueOf(score));
+
+        // Receive elapsed time
+        long elapsedTime = getIntent().getLongExtra("ELAPSED_TIME", 0);
+        String formattedTime = formatTime(elapsedTime);
+
+        // Set time text (optional)
+        if (timeTextView !=  null) {
+            timeTextView.setText("Tiempo: " + formattedTime);
+        } else {
+            Log.w("GameOverActivity", "Time TextView not found. Add a TextView with ID 'timeTextView'");
+        }
 
         replayButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -58,6 +57,13 @@ public class GameOverActivity extends AppCompatActivity {
             }
         });
     }
+
+    private String formatTime(long millis) {
+        int seconds = (int) (millis / 1000) % 60;
+        int minutes = (int) ((millis / (1000 * 60)) % 60);
+        return String.format("%02d:%02d", minutes, seconds);
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         return toolbarHelper.handleCreateOptionsMenu(menu);

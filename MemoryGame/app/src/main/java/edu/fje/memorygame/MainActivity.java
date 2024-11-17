@@ -22,7 +22,6 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private ToolbarHelper toolbarHelper;
-    //NUEVO ALSO
     private RecyclerView scRecyclerView;
     private List <ScoreItem> scoreList;
 
@@ -46,11 +45,6 @@ public class MainActivity extends AppCompatActivity {
         scRecyclerView = findViewById(R.id.recyclerView);
         scRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         scoreList = new ArrayList<>();
-
-        //DATABASE
-        DBGameBuilder dbGameBuilder = new DBGameBuilder(this);
-        insertInitialScore(dbGameBuilder);
-        manageDatabase(dbGameBuilder);
     }
 
     //TOOLBAR
@@ -67,45 +61,4 @@ public class MainActivity extends AppCompatActivity {
        }
     }
 
-    private void insertInitialScore(DBGameBuilder dbGameBuilder) {
-        SQLiteDatabase db = dbGameBuilder.getWritableDatabase();
-        Log.i("MainActivity", "Database ON: " + db.isOpen());
-        ContentValues values = new ContentValues();
-        values.put(DBStructure.DataEntry.COLUMN_SCORE, 0); // puntaje inicial
-        long newRowId = db.insert(DBStructure.DataEntry.TABLE_NAME, null, values);
-        Log.i("MainActivity", "New Row ID: " + newRowId);
-        db.close();
-    }
-
-    private void manageDatabase(DBGameBuilder dbGameBuilder) {
-        SQLiteDatabase db = dbGameBuilder.getReadableDatabase();
-        String[] projectionScore = {
-                DBStructure.DataEntry._ID,
-                DBStructure.DataEntry.COLUMN_SCORE,
-                DBStructure.DataEntry.COLUMN_TIMESTAMP
-        };
-
-        Cursor cursor = db.query(
-                DBStructure.DataEntry.TABLE_NAME,
-                projectionScore,
-                null, null, null, null,
-                DBStructure.DataEntry.COLUMN_TIMESTAMP
-        );
-        try {
-            scoreList.clear(); //Clear the list before adding anything
-            while (cursor.moveToNext()) {
-                int score = cursor.getInt(cursor.getColumnIndexOrThrow(DBStructure.DataEntry.COLUMN_SCORE));
-                String timestamp = cursor.getString(cursor.getColumnIndexOrThrow(DBStructure.DataEntry.COLUMN_TIMESTAMP));
-                String playTime = "N/A";
-
-                ScoreItem scoreItem = new ScoreItem(score, timestamp, playTime);
-                scoreList.add(scoreItem);
-            }
-                ScoreAdapter adapter = new ScoreAdapter(scoreList);
-                scRecyclerView.setAdapter(adapter);
-        } finally {
-            cursor.close();
-            db.close();
-        }
-    }
 }

@@ -7,7 +7,6 @@
     <string name="attemps">Attemps: %1$d</string>
     <string name="gameOver">GAME OVER!</string>
     <string name="scoreMsg">Your score is:</string>
-    <string name="finalScore">TextView</string>
     <string name="inputName">name</string>
     <string name="replay">Play Again!</string>
     <string name="labelScore">Score: </string>

@@ -6,10 +6,11 @@ import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
+import android.os.SystemClock;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Chronometer;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -22,19 +23,21 @@ import java.util.List;
 import java.util.Random;
 
 public class GameActivity extends AppCompatActivity {
-    private long startTime;
+    private Chronometer chronometer;
     private ToolbarHelper toolbarHelper;
     private int scoreCount = 0;
     private int attemps = 10;
+    private int currentDelay = 3000;
 
-    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_game);
 
-        startTime = System.currentTimeMillis();
+        chronometer = findViewById(R.id.chronometer);
+        chronometer.setBase(SystemClock.elapsedRealtime());
+        chronometer.start();
 
         toolbarHelper = new ToolbarHelper(this);
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -80,18 +83,20 @@ public class GameActivity extends AppCompatActivity {
             attemps--;
             updateAttemps();
 
-            if(attemps <= 8){
-                long endTime = System.currentTimeMillis();
-                long elapsedTime = endTime - startTime;
+            if(attemps <= 8){ //CAMBIAR A 0, DESPUES DE LOS TESTEOS
+                chronometer.stop();
+                long elapsedTime = SystemClock.elapsedRealtime() - chronometer.getBase();
 
                 Intent gameOverIntent = new Intent(this, GameOverActivity.class);
                 gameOverIntent.putExtra("SCORE", scoreCount);
+                gameOverIntent.putExtra("ELAPSED_TIME", elapsedTime);
                 startActivity(gameOverIntent);
                 finish();
                 return;
             }
         }
         updateScore();
+        updateDelay();
 
         updatePreview(arrayImg);
         new Handler().postDelayed(()->{
@@ -114,7 +119,13 @@ public class GameActivity extends AppCompatActivity {
         prev.setTag(arrayImg[newRandomInt]);
         prev.setVisibility(View.VISIBLE);
 
-        new Handler().postDelayed(()-> prev.setVisibility(View.INVISIBLE), 3000);
+        new Handler().postDelayed(()-> prev.setVisibility(View.INVISIBLE), currentDelay);
+    }
+
+    private void updateDelay(){
+        if(scoreCount % 50 == 0){
+            currentDelay -= 250;
+        }
     }
 
     private void updateScore() {
@@ -138,14 +149,5 @@ public class GameActivity extends AppCompatActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    private void insertScore(int score, DBGameBuilder dbGameBuilder) {
-        SQLiteDatabase db = dbGameBuilder.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put(DBStructure.DataEntry.COLUMN_SCORE, score);
-        long newRowId = db.insert(DBStructure.DataEntry.TABLE_NAME, null, values);
-        Log.i("MainActivity", "New Row Id inserted: " + newRowId);
-        db.close();
     }
 }
