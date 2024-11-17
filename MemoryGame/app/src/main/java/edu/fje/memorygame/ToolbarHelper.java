@@ -1,6 +1,7 @@
 package edu.fje.memorygame;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -27,7 +28,8 @@ public class ToolbarHelper {
 
     public boolean handleOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_instructions) {
-            Toast.makeText(activity, "Instructions clicked", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(activity, WebViewActivity.class);
+            activity.startActivity(intent);
             return true;
         }
         return false;

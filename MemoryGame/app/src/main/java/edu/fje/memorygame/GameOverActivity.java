@@ -15,6 +15,9 @@ import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class GameOverActivity extends AppCompatActivity {
     private ToolbarHelper toolbarHelper;
 
@@ -41,12 +44,17 @@ public class GameOverActivity extends AppCompatActivity {
         long elapsedTime = getIntent().getLongExtra("ELAPSED_TIME", 0);
         String formattedTime = formatTime(elapsedTime);
 
-        // Set time text (optional)
+        // Set time text
         if (timeTextView !=  null) {
             timeTextView.setText("Tiempo: " + formattedTime);
         } else {
             Log.w("GameOverActivity", "Time TextView not found. Add a TextView with ID 'timeTextView'");
         }
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");  // Adjust format as needed
+        String currentDate = dateFormat.format(new Date());
+
+        insertScore(formattedTime, score, currentDate);
 
         replayButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -62,6 +70,28 @@ public class GameOverActivity extends AppCompatActivity {
         int seconds = (int) (millis / 1000) % 60;
         int minutes = (int) ((millis / (1000 * 60)) % 60);
         return String.format("%02d:%02d", minutes, seconds);
+    }
+
+    private void insertScore(String formattedTime, int score, String currentDate) {
+        DBHelper dbHelper = new DBHelper(this);
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+        // Crear el ContentValues con los datos
+        ContentValues values = new ContentValues();
+        values.put("tiempo", formattedTime);  // El tiempo formateado
+        values.put("puntuacion", score);     // La puntuación
+        values.put("fecha", currentDate);
+
+        // Insertar los valores en la tabla
+        long newRowId = db.insert("puntuacion", null, values);
+
+        if (newRowId != -1) {
+            Log.i("GameOverActivity", "Puntuación insertada con ID: " + newRowId);
+        } else {
+            Log.w("GameOverActivity", "Error al insertar puntuación.");
+        }
+
+        db.close();
     }
 
     @Override

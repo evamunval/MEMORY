@@ -6,23 +6,23 @@
     android:padding="16dp">
 
     <TextView
-        android:id="@+id/scoreText"
-        android:layout_width="0dp"
+        android:id="@+id/scoreTextView"
+        android:layout_width="110dp"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:textSize="16sp" />
+        android:padding="16dp"
+        android:text="Score" />
 
     <TextView
-        android:id="@+id/timestampText"
-        android:layout_width="0dp"
+        android:id="@+id/timeTextView"
+        android:layout_width="104dp"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:textSize="16sp" />
+        android:padding="16dp"
+        android:text="Time" />
 
     <TextView
-        android:id="@+id/playTimeText"
-        android:layout_width="0dp"
+        android:id="@+id/dateTextView"
+        android:layout_width="109dp"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:textSize="16sp" />
+        android:padding="16dp"
+        android:text="Date" />
 </LinearLayout>

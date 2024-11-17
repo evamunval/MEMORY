@@ -1,11 +1,9 @@
 package edu.fje.memorygame;
 
-import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import androidx.appcompat.widget.Toolbar;
@@ -13,11 +11,7 @@ import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.constraintlayout.widget.ConstraintLayout;
-
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -45,6 +39,38 @@ public class MainActivity extends AppCompatActivity {
         scRecyclerView = findViewById(R.id.recyclerView);
         scRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         scoreList = new ArrayList<>();
+        loadScores();
+    }
+
+    private void loadScores() {
+        // Initialize database helper
+        DBHelper dbUtil = new DBHelper(this);
+        SQLiteDatabase db = dbUtil.getReadableDatabase();
+
+        String[] projection = {
+                "puntuacion", "fecha", "tiempo"
+        };
+
+        Cursor cursor = db.query(
+                "puntuacion",
+                projection,
+                null, null, null, null,
+                "fecha DESC"
+        );
+
+        scoreList.clear();
+
+        while (cursor.moveToNext()) {
+            int score = cursor.getInt(cursor.getColumnIndexOrThrow("puntuacion"));
+            String time = cursor.getString(cursor.getColumnIndexOrThrow("tiempo"));
+            String date = cursor.getString(cursor.getColumnIndexOrThrow("fecha"));
+            scoreList.add(new ScoreItem(score, time, date));
+        }
+        cursor.close();
+
+        // Set the adapter to RecyclerView
+        ScoreAdapter adapter = new ScoreAdapter(scoreList);
+        scRecyclerView.setAdapter(adapter);
     }
 
     //TOOLBAR

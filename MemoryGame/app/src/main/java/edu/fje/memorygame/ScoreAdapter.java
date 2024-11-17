@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 public class ScoreAdapter extends RecyclerView.Adapter<ScoreAdapter.ScoreViewHolder> {
-    private final List<ScoreItem> scoreList;
+    private List<ScoreItem> scoreList;
 
     public ScoreAdapter(List<ScoreItem> scoreList) {
         this.scoreList = scoreList;
@@ -26,7 +26,7 @@ public class ScoreAdapter extends RecyclerView.Adapter<ScoreAdapter.ScoreViewHol
     public void onBindViewHolder(ScoreViewHolder holder, int position) {
         ScoreItem scoreItem = scoreList.get(position);
         holder.scoreText.setText(String.valueOf(scoreItem.getScore()));
-        holder.timestampText.setText(scoreItem.getTimestamp());
+        holder.dateText.setText(scoreItem.getDate());
         holder.playTimeText.setText(scoreItem.getPlayTime());
     }
 
@@ -37,14 +37,14 @@ public class ScoreAdapter extends RecyclerView.Adapter<ScoreAdapter.ScoreViewHol
 
     public static class ScoreViewHolder extends RecyclerView.ViewHolder{
         TextView scoreText;
-        TextView timestampText;
+        TextView dateText;
         TextView playTimeText;
 
         public ScoreViewHolder(View itemView){
             super(itemView);
-            scoreText = itemView.findViewById(R.id.scoreText);
-            timestampText = itemView.findViewById(R.id.timestampText);
-            playTimeText = itemView.findViewById(R.id.playTimeText);
+            scoreText = itemView.findViewById(R.id.scoreTextView);
+            dateText = itemView.findViewById(R.id.dateTextView);
+            playTimeText = itemView.findViewById(R.id.timeTextView);
         }
     }
 }
