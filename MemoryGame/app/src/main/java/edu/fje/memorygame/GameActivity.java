@@ -1,9 +1,6 @@
 package edu.fje.memorygame;
 
-import android.annotation.SuppressLint;
-import android.content.ContentValues;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
@@ -13,14 +10,15 @@ import android.view.View;
 import android.widget.Chronometer;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+//import org.json.JSONException;
+//import org.json.JSONObject;
 
 public class GameActivity extends AppCompatActivity {
     private Chronometer chronometer;
@@ -144,7 +142,7 @@ public class GameActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (toolbarHelper.handleOptionsItemSelected(item)) {
             return true;
         }
