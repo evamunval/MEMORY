@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">MemoryGame</string>
+    <string name="welcome_tag">WELCOME</string>
+    <string name="challenge_tag">ARE YOU READY TO BEAT A NEW SCORE?</string>
+    <string name="play">Play</string>
+    <string name="score">Score: %1$d</string>
+    <string name="attemps">Attemps: %1$d</string>
+    <string name="gameOver">GAME OVER!</string>
+    <string name="scoreMsg">Your score is:</string>
+    <string name="finalScore">TextView</string>
+    <string name="inputName">name</string>
+    <string name="replay">Play Again!</string>
+    <string name="labelScore">Score: </string>
+    <string name="ColDate">Date: </string>
+    <string name="HTime">Time: </string>
+</resources>
